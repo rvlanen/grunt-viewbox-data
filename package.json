@@ -1,7 +1,7 @@
 {
   "name": "grunt-viewbox-data",
   "description": "Extract viewBox data from svg sprites",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/rvlanen/grunt-viewbox-data",
   "author": {
     "name": "Roel van Lanen"
@@ -20,7 +20,7 @@
     }
   ],
   "engines": {
-    "node": ">= 0.8.0"
+    "node": ">= 0.10.0"
   },
   "scripts": {
     "test": "grunt test"
@@ -32,7 +32,8 @@
     "grunt-contrib-nodeunit": "^0.3.3"
   },
   "keywords": [
-    "gruntplugin"
+    "gruntplugin",
+    "svg"
   ],
   "dependencies": {
     "lodash.assign": "^4.2.0",

@@ -13,8 +13,6 @@ var assign = require('lodash.assign');
 
 module.exports = function (grunt) {
 
-    var spritePaths = [];
-
     function getXml2js(xml) {
         var obj;
 
@@ -32,7 +30,7 @@ module.exports = function (grunt) {
     }
 
     function getSpriteViewBoxData(spritePath) {
-        const svgData = getXml2js(grunt.file.read(spritePath));
+        var svgData = getXml2js(grunt.file.read(spritePath));
 
         if (svgData.svg.symbol) {
             return svgData.svg.symbol.reduce(addSymbolData, {});
@@ -41,36 +39,30 @@ module.exports = function (grunt) {
         }
     }
 
-    function getViewBoxData() {
-        return spritePaths.reduce(function (obj, path) {
+    function getViewBoxData(src) {
+        return src.reduce(function (obj, path) {
             return assign(obj, getSpriteViewBoxData(path));
         }, {});
     }
 
     grunt.registerMultiTask('viewbox_data', 'Extract viewBox data from svg sprites', function () {
 
-        this.files.forEach(function (f) {
-
-            function isFound(filepath) {
-                if (!grunt.file.exists(filepath)) {
-                    grunt.log.warn('Source file "' + filepath + '" not found.');
-                    return false;
-                } else {
-                    return true;
-                }
+        function fileExists(filepath) {
+            if (!grunt.file.exists(filepath)) {
+                grunt.log.warn('Source file "' + filepath + '" not found.');
+                return false;
+            } else {
+                return true;
             }
+        }
 
-            var src = f.src
-                .filter(isFound)
-                .forEach(function (filepath) {
-                    spritePaths.push(filepath);
-                });
+        this.files.forEach(function (f) {
+            var src = f.src.filter(fileExists);
 
-            grunt.file.write(f.dest, JSON.stringify(getViewBoxData()));
-
+            grunt.file.write(f.dest, JSON.stringify(getViewBoxData(src)));
             grunt.log.writeln('File "' + f.dest + '" created.');
-
         });
+
     });
 
 };
